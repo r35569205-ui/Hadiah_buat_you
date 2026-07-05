@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kado Spesial Untukmu</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Plus+Jakarta+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            background: linear-gradient(180deg, #231019 0%, #0f050a 100%);
+            color: #fff;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            text-align: center;
+            padding: 20px;
+        }
+        .orbit-container {
+            position: relative;
+            width: 260px;
+            height: 260px;
+            border: 1px dashed rgba(223, 170, 107, 0.3);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: spin 20s linear infinite;
+            margin-bottom: 30px;
+        }
+        .center-heart {
+            position: absolute;
+            font-family: 'Cinzel', serif;
+            color: #dfaa6b;
+            animation: float 4s ease-in-out infinite;
+        }
+        .orbit-item {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background: #fff;
+            border-radius: 50%;
+            border: 2px solid #dfaa6b;
+            overflow: hidden;
+        }
+        .item-1 { top: -25px; left: 105px; }
+        .item-2 { bottom: -25px; left: 105px; }
+        .item-3 { top: 105px; left: -25px; }
+        .item-4 { top: 105px; right: -25px; }
+
+        .surat-box {
+            max-width: 320px;
+            background: rgba(255, 255, 255, 0.08);
+            padding: 15px 20px;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 14px;
+            line-height: 1.6;
+            color: #eaeaea;
+        }
+
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+        @keyframes float { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+    </style>
+</head>
+<body>
+
+    <audio id="bgm" loop></audio>
+
+    <div class="orbit-container">
+        <div class="center-heart">
+            <h2 id="view-nama">UNTUKMU</h2>
+        </div>
+        <div class="orbit-item item-1"><img src="https://picsum.photos/100" width="100%"></div>
+        <div class="orbit-item item-2"><img src="https://picsum.photos/101" width="100%"></div>
+        <div class="orbit-item item-3"><img src="https://picsum.photos/102" width="100%"></div>
+        <div class="orbit-item item-4"><img src="https://picsum.photos/103" width="100%"></div>
+    </div>
+
+    <div class="surat-box">
+        <p id="view-surat">Membuka kado...</p>
+    </div>
+
+    <p style="margin-top: 20px; color: #8c8a86; font-size: 11px;">🎵 Ketuk layar untuk mengaktifkan musik latar</p>
+
+    <script>
+        // Ambil data kiriman dari parameter URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const encodedData = urlParams.get('data');
+
+        if (encodedData) {
+            try {
+                // Bongkar kembali kode teks menjadi data asli
+                const decodedData = decodeURIComponent(escape(atob(encodedData)));
+                const kado = JSON.parse(decodedData);
+
+                // Pasang data ke halaman web
+                document.getElementById('view-nama').innerHTML = `UNTUK<br>${kado.n.toUpperCase()}`;
+                document.getElementById('view-surat').innerText = kado.s;
+                
+                // Atur audio musik
+                const audio = document.getElementById('bgm');
+                audio.src = kado.m;
+
+                // Hidupkan musik saat layar disentuh pertama kali
+                document.body.addEventListener('click', () => {
+                    audio.play().catch(err => console.log("Musik butuh izin ketukan pengguna"));
+                });
+
+            } catch (e) {
+                document.getElementById('view-surat').innerText = "Ups! Link kado ini sepertinya rusak atau terpotong.";
+            }
+        } else {
+            document.getElementById('view-surat').innerText = "Belum ada data kado. Buat terlebih dahulu di halaman utama!";
+        }
+    </script>
+</body>
+</html>
